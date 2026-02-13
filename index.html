@@ -1,109 +1,150 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Валентинка 💖</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Валентинка 💖</title>
 
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      background: linear-gradient(135deg, #ffd6e8, #ffeef5);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: "Arial", sans-serif;
-    }
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    background: linear-gradient(135deg, #ffd6e8, #ffeef5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "Arial", sans-serif;
+    overflow: hidden;
+  }
 
-    .card {
-      background: white;
-      width: 90%;
-      max-width: 360px;
-      padding: 30px 20px;
-      border-radius: 20px;
-      text-align: center;
-      box-shadow: 0 15px 30px rgba(0,0,0,0.15);
-      position: relative;
-    }
+  .card {
+    background: linear-gradient(145deg, #ffffff, #ffeef5);
+    width: 90%;
+    max-width: 360px;
+    padding: 30px 20px;
+    border-radius: 25px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+  }
 
-    h1 {
-      font-size: 1.5em;
-      color: #e63946;
-      margin-bottom: 15px;
-    }
+  h1 {
+    font-size: 1.6em;
+    color: #e63946;
+    margin-bottom: 15px;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+  }
 
-    img {
-      width: 160px;
-      margin: 10px 0 20px;
-    }
+  img {
+    width: 160px;
+    margin: 10px 0 20px;
+    border-radius: 15px;
+    transition: transform 0.4s ease;
+  }
 
-    .buttons {
-      position: relative;
-      height: 80px;
-    }
+  .buttons {
+    position: relative;
+    height: 80px;
+  }
 
-    button {
-      font-size: 1.1em;
-      padding: 12px 20px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: 0.2s;
-    }
+  button {
+    font-size: 1.1em;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.2s ease;
+    position: absolute;
+  }
 
-    #yes {
-      background: #4caf50;
-      color: white;
-    }
+  #yes {
+    background: linear-gradient(45deg, #4caf50, #81c784);
+    color: white;
+    transform: scale(0.5);
+    bottom: 0;
+    right: 50%;
+    transform-origin: center;
+    box-shadow: 0 5px 15px rgba(76,175,80,0.4);
+  }
 
-    #no {
-      background: #e63946;
-      color: white;
-      position: absolute;
-      left: 0;
-      top: 0;
-    }
-  </style>
+  #no {
+    background: linear-gradient(45deg, #e63946, #f28fa6);
+    color: white;
+    left: 0;
+    top: 0;
+    box-shadow: 0 5px 15px rgba(230,57,70,0.4);
+  }
+
+  /* Эффект дрожащей кнопки Нет */
+  @keyframes shake {
+    0% { transform: translate(0, 0); }
+    20% { transform: translate(-5px, 0); }
+    40% { transform: translate(5px, 0); }
+    60% { transform: translate(-5px, 0); }
+    80% { transform: translate(5px, 0); }
+    100% { transform: translate(0, 0); }
+  }
+
+  /* Плавное появление после нажатия Да */
+  .fade-in {
+    animation: fadeIn 0.6s ease forwards;
+    opacity: 0;
+  }
+
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+
+</style>
 </head>
 <body>
 
-  <div class="card" id="card">
-    <h1>Ты будешь моей валентинкой? 💕</h1>
-
-    <img src= "main/cat1.jpg" alt="котик">
-
-    <div class="buttons">
-      <button id="yes">Да 💖</button>
-      <button id="no">Нет 🙈</button>
-    </div>
+<div class="card" id="card">
+  <h1>Ты будешь моей валентинкой? 💕</h1>
+  <img src="main/cat1.jpg" alt="котик" id="main-img">
+  <div class="buttons">
+    <button id="yes">Да 💖</button>
+    <button id="no">Нет 🙈</button>
   </div>
+</div>
 
-  <script>
-    const noBtn = document.getElementById("no");
-    const yesBtn = document.getElementById("yes");
-    let yesSize = 1;
+<script>
+  const noBtn = document.getElementById("no");
+  const yesBtn = document.getElementById("yes");
+  const card = document.getElementById("card");
+  let yesSize = 0.5;
+  yesBtn.style.transform = `scale(${yesSize})`;
 
-    noBtn.addEventListener("touchstart", moveNo);
-    noBtn.addEventListener("mouseover", moveNo);
+  function moveNo() {
+    const cardRect = card.getBoundingClientRect();
+    const btnRect = noBtn.getBoundingClientRect();
 
-    function moveNo() {
-      const x = Math.random() * 200 - 100;
-      const y = Math.random() * 60;
-      noBtn.style.transform = `translate(${x}px, ${y}px)`;
+    const maxX = cardRect.width - btnRect.width;
+    const maxY = cardRect.height - btnRect.height;
+    const x = Math.random() * maxX;
+    const y = Math.random() * maxY;
 
-      yesSize += 0.1;
-      yesBtn.style.transform = `scale(${yesSize})`;
-    }
+    noBtn.style.transform = `translate(${x}px, ${y}px)`;
+    noBtn.style.animation = 'shake 0.3s'; // дрожание
+    setTimeout(() => noBtn.style.animation = '', 300);
 
-    yesBtn.addEventListener("click", () => {
-      document.getElementById("card").innerHTML = `
-        <h1>Урааа! 😻💘</h1>
-      <img src="main/cat.jpg">
-        <p style="font-size:1.2em;">Теперь ты моя валентинка 💖</p>
-      `;
-    });
-  </script>
+    yesSize += 0.1;
+    yesBtn.style.transform = `scale(${yesSize})`;
+  }
+
+  noBtn.addEventListener("touchstart", moveNo);
+  noBtn.addEventListener("mouseover", moveNo);
+
+  yesBtn.addEventListener("click", () => {
+    card.innerHTML = `
+      <h1 class="fade-in">Урааа! 😻💘</h1>
+      <img src="main/cat.jpg" class="fade-in" alt="котик">
+      <p class="fade-in" style="font-size:1.2em;">Теперь ты моя валентинка 💖</p>
+    `;
+  });
+</script>
 
 </body>
 </html>
