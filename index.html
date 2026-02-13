@@ -27,7 +27,7 @@
     box-shadow: 0 20px 40px rgba(0,0,0,0.2);
     position: relative;
     overflow: hidden;
-    transition: transform 0.3s ease;
+    transition: transform 1s ease, opacity 1s ease;
   }
 
   h1 {
@@ -77,15 +77,6 @@
     box-shadow: 0 5px 15px rgba(230,57,70,0.4);
   }
 
-  @keyframes shake {
-    0% { transform: translate(0, 0); }
-    20% { transform: translate(-5px, 0); }
-    40% { transform: translate(5px, 0); }
-    60% { transform: translate(-5px, 0); }
-    80% { transform: translate(5px, 0); }
-    100% { transform: translate(0, 0); }
-  }
-
   .fade-in {
     animation: fadeIn 0.6s ease forwards;
     opacity: 0;
@@ -95,10 +86,10 @@
     to { opacity: 1; }
   }
 
-  /* Эффект исчезновения как Танос */
-  @keyframes vanish {
-    0% { opacity: 1; transform: scale(1) rotate(0deg); }
-    100% { opacity: 0; transform: scale(0) rotate(360deg); }
+  /* Эффект исчезновения */
+  .vanish {
+    transform: scale(0) rotate(360deg);
+    opacity: 0;
   }
 
 </style>
@@ -118,33 +109,36 @@
   const noBtn = document.getElementById("no");
   const yesBtn = document.getElementById("yes");
   const card = document.getElementById("card");
+
   let yesSize = 0.5;
   yesBtn.style.transform = `scale(${yesSize})`;
 
+  // Плавное убегание кнопки "Нет"
   function moveNo() {
     const cardRect = card.getBoundingClientRect();
     const btnRect = noBtn.getBoundingClientRect();
 
     const maxX = cardRect.width - btnRect.width;
     const maxY = cardRect.height - btnRect.height;
+
     const x = Math.random() * maxX;
     const y = Math.random() * maxY;
 
     noBtn.style.transform = `translate(${x}px, ${y}px)`;
-    noBtn.style.animation = 'shake 0.3s';
-    setTimeout(() => noBtn.style.animation = '', 300);
 
+    // Увеличиваем кнопку "Да"
     yesSize += 0.1;
     yesBtn.style.transform = `scale(${yesSize})`;
   }
 
+  // Нажатие на "Нет" – исчезновение
+  function vanishCard() {
+    card.classList.add('vanish');
+  }
+
+  noBtn.addEventListener("mouseover", moveNo);
   noBtn.addEventListener("touchstart", vanishCard);
   noBtn.addEventListener("click", vanishCard);
-  noBtn.addEventListener("mouseover", moveNo);
-
-  function vanishCard() {
-    card.style.animation = 'vanish 1s forwards';
-  }
 
   yesBtn.addEventListener("click", () => {
     card.innerHTML = `
@@ -153,6 +147,7 @@
       <p class="fade-in" style="font-size:1.2em;">Теперь ты моя валентинка 💖</p>
     `;
   });
+
 </script>
 
 </body>
