@@ -77,7 +77,6 @@
     box-shadow: 0 5px 15px rgba(230,57,70,0.4);
   }
 
-  /* Эффект дрожащей кнопки Нет */
   @keyframes shake {
     0% { transform: translate(0, 0); }
     20% { transform: translate(-5px, 0); }
@@ -87,7 +86,6 @@
     100% { transform: translate(0, 0); }
   }
 
-  /* Плавное появление после нажатия Да */
   .fade-in {
     animation: fadeIn 0.6s ease forwards;
     opacity: 0;
@@ -95,6 +93,12 @@
 
   @keyframes fadeIn {
     to { opacity: 1; }
+  }
+
+  /* Эффект исчезновения как Танос */
+  @keyframes vanish {
+    0% { opacity: 1; transform: scale(1) rotate(0deg); }
+    100% { opacity: 0; transform: scale(0) rotate(360deg); }
   }
 
 </style>
@@ -127,15 +131,20 @@
     const y = Math.random() * maxY;
 
     noBtn.style.transform = `translate(${x}px, ${y}px)`;
-    noBtn.style.animation = 'shake 0.3s'; // дрожание
+    noBtn.style.animation = 'shake 0.3s';
     setTimeout(() => noBtn.style.animation = '', 300);
 
     yesSize += 0.1;
     yesBtn.style.transform = `scale(${yesSize})`;
   }
 
-  noBtn.addEventListener("touchstart", moveNo);
+  noBtn.addEventListener("touchstart", vanishCard);
+  noBtn.addEventListener("click", vanishCard);
   noBtn.addEventListener("mouseover", moveNo);
+
+  function vanishCard() {
+    card.style.animation = 'vanish 1s forwards';
+  }
 
   yesBtn.addEventListener("click", () => {
     card.innerHTML = `
